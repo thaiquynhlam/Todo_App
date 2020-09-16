@@ -1,5 +1,4 @@
-const path = require('path');
-const {ipcRenderer} = require('electron');
+// const {ipcRenderer} = require('electron');
 // Set current time to time bar
 let today = new Date();
 let year = today.getFullYear();
@@ -21,7 +20,7 @@ function setCurrentTime() {
 let numCompletedTasks = 0;
 let numPausingTasks = 0;
 let numCurrentTasks = 0;
-ipcRenderer.on('TaskItems:Initial', (event, data) => {
+window.api.receive('TaskItems:Initial', data => {
     try {
         const taskList = JSON.parse(data);
         taskList.forEach(taskItem => {
@@ -76,7 +75,7 @@ $('#add-task-icon').click(() => {
         task: taskContent
     })
     $('#input-task').val("");
-    ipcRenderer.send('TaskItem:add', dataSend);
+    window.api.send('TaskItem:add', dataSend);
 })
 $('#input-task').keypress(function(event){
     var keycode = (event.keyCode ? event.keyCode : event.which);
@@ -88,11 +87,11 @@ $('#input-task').keypress(function(event){
             task: taskContent
         })
         $('#input-task').val("");
-        ipcRenderer.send('TaskItem:add', dataSend);
+        window.api.send('TaskItem:add', dataSend);
     }
 });
 
-ipcRenderer.on('TaskItem:completeAdd', (_, data) => {
+window.api.receive('TaskItem:completeAdd', data => {
     if(data === addingTaskContent){
         const taskContainer = $('#current-task-component-template').clone(true);
         taskContainer.removeAttr("id");
@@ -117,10 +116,10 @@ $('.btn-complete').click(function(){
         date: today.toDateString(),
         task: taskContent,
     });
-    ipcRenderer.send("TaskItem:complete", sendingDeleteMessage);
+    window.api.send("TaskItem:complete", sendingDeleteMessage);
 })
 
-ipcRenderer.on('TaskItem:completeChangeCompletedStatus', (event, data) => {
+window.api.receive('TaskItem:completeChangeCompletedStatus', data => {
     data = JSON.parse(data);
     if(data.task === selectingTaskContent){
         //append the task item to completed task area
@@ -150,10 +149,10 @@ $('.btn-pause').click(function(){
         date: today.toDateString(),
         task: taskContent,
     });
-    ipcRenderer.send("TaskItem:pause", sendingPauseMessage);
+    window.api.send("TaskItem:pause", sendingPauseMessage);
 })
 
-ipcRenderer.on('TaskItem:completeChangePausedStatus', (event, data) => {
+window.api.receive('TaskItem:completeChangePausedStatus', data => {
     // console.log("received message", data);
     if(data === selectingTaskContent){
         //append the task item to completed task area
@@ -179,10 +178,10 @@ $('.btn-continue').click(function(){
         date: today.toDateString(),
         task: taskContent,
     });
-    ipcRenderer.send("TaskItem:continue", sendingContinueMessage);
+    window.api.send("TaskItem:continue", sendingContinueMessage);
 })
 
-ipcRenderer.on('TaskItem:completeChangeContinuingStatus', (event, data) => {
+window.api.receive('TaskItem:completeChangeContinuingStatus', data => {
     // console.log("received message", data);
     if(data === selectingTaskContent){
         //append the task item to completed task area
@@ -208,10 +207,10 @@ $('.btn-delete').click(function(){
         date: today.toDateString(),
         task: taskContent,
     });
-    ipcRenderer.send("TaskItem:delete", sendingDeleteMessage);
+    window.api.send("TaskItem:delete", sendingDeleteMessage);
 })
 
-ipcRenderer.on('TaskItem:completDeleteTask', (event, data) => {
+window.api.receive('TaskItem:completDeleteTask', data => {
     // console.log("received message", data);
     data = JSON.parse(data);
     if(data.task === selectingTaskContent){
@@ -232,10 +231,10 @@ ipcRenderer.on('TaskItem:completDeleteTask', (event, data) => {
 
 // Handle reset button --> reload page
 $('.btn-reset').click(function(){
-    ipcRenderer.send("TaskItem:reset", today.toDateString());
+    window.api.send("TaskItem:reset", today.toDateString());
 })
 
-ipcRenderer.on('TaskItems:reload', (event, data) => {
+window.api.receive('TaskItems:reload', data => {
     numCompletedTasks = 0;
     numPausingTasks = 0;
     numCurrentTasks = 0;
@@ -277,7 +276,6 @@ ipcRenderer.on('TaskItems:reload', (event, data) => {
 
 })
 
-
 // Toggle expand or collapse icon 
 // 1. Pausing Area
 $('#pausing-list-toggle').click(function(){
@@ -293,5 +291,5 @@ $('#completed-list-toggle').click(function(){
 })
 
 // window.onbeforeunload = () => {
-//     ipcRenderer.send("Reload:Page")
+//     window.api.send("Reload:Page")
 // };

@@ -16,8 +16,8 @@ const storageTasksPath = path.join(app.getPath('userData'), 'storage-tasks.json'
 // create file to store if not exist
 fs.exists(storageTasksPath, function (exists) {
     if (!exists) {
-        fs.writeFile(storageTasksPath,'{}', { flag: 'wx' }, function (err) {
-            if(err) throw err;
+        fs.writeFile(storageTasksPath, '{}', { flag: 'wx' }, function (err) {
+            if (err) throw err;
             console.log("Create new file with the empty object content!");
         })
     }
@@ -30,10 +30,14 @@ function createMainWindow() {
         height: primaryDisplay.size.height,
         icon: './assets/icons/todolist-final.png',
         webPreferences: {
-            nodeIntegration: true,
+            preload: path.join(__dirname, 'preload.js'),
+            nodeIntegration: false, // is default value after Electron v5
+            contextIsolation: true, // protect against prototype pollution
+            enableRemoteModule: false
         },
     })
     mainWindow.loadFile('./app/index.html')
+    //Tray doesn't work when building packet-> comment this code
     // createMainTray()
     if (isDev) {
         mainWindow.webContents.openDevTools()
@@ -66,9 +70,11 @@ function createAboutWindow() {
         icon: './assets/icons/lmt.png',
     })
     aboutWindow.loadURL('https://github.com/lmt20')
-    if (!aboutTray) {
-        // createAboutTray();
-    }
+
+    //Tray doesn't work when building packet-> comment this code
+    // if (!aboutTray) {
+    // createAboutTray();
+    // }
 }
 function createSendMailWindow() {
     // console.log((primaryDisplay.size.width - 500)/2);
@@ -78,13 +84,18 @@ function createSendMailWindow() {
         height: primaryDisplay.size.height,
         icon: './assets/icons/gmail.jpg',
         webPreferences: {
-            nodeIntegration: true,
+            preload: path.join(__dirname, 'preload.js'),
+            nodeIntegration: false, // is default value after Electron v5
+            contextIsolation: true, // protect against prototype pollution
+            enableRemoteModule: false
         },
     })
     sendMailWindow.loadFile('./app/send-mail.html')
-    if(!mailTray) {
-        // createMailTray();
-    }
+
+    //Tray doesn't work when building packet-> comment this code
+    // if(!mailTray) {
+    // createMailTray();
+    // }
 
 }
 
@@ -155,7 +166,7 @@ app.on('ready', () => {
     primaryDisplay = screen.getPrimaryDisplay()
     createMainWindow()
     // process add task item
-    ipcMain.on('TaskItem:add', (event, message) => {
+    ipcMain.handle('TaskItem:add', (event, message) => {
         fs.readFile(storageTasksPath, (err, data) => {
             if (!err) {
                 try {
@@ -165,7 +176,7 @@ app.on('ready', () => {
                     oldDataOnAddingDate.push({ name: addData.task, status: "doing" });
                     storageData[addData.date] = oldDataOnAddingDate;
                     fs.writeFile(storageTasksPath, JSON.stringify(storageData), (err) => {
-                        event.reply('TaskItem:completeAdd', addData.task);
+                        mainWindow.webContents.send('TaskItem:completeAdd', addData.task);
                     })
                 } catch (error) {
                     console.log(error);
@@ -176,7 +187,7 @@ app.on('ready', () => {
 
     })
     // process change task item status to completed
-    ipcMain.on('TaskItem:complete', (event, message) => {
+    ipcMain.handle('TaskItem:complete', (event, message) => {
         fs.readFile(storageTasksPath, (err, data) => {
             if (!err) {
                 try {
@@ -193,7 +204,7 @@ app.on('ready', () => {
                             }
                             storageData[changingData.date][prevDataIndex].status = "completed";
                             fs.writeFile(storageTasksPath, JSON.stringify(storageData), (err) => {
-                                event.reply('TaskItem:completeChangeCompletedStatus', JSON.stringify(sendData));
+                                mainWindow.webContents.send('TaskItem:completeChangeCompletedStatus', JSON.stringify(sendData));
                             })
                         }
                     }
@@ -205,7 +216,7 @@ app.on('ready', () => {
         })
     })
     // process change task item status to pausing
-    ipcMain.on('TaskItem:pause', (event, message) => {
+    ipcMain.handle('TaskItem:pause', (event, message) => {
         fs.readFile(storageTasksPath, (err, data) => {
             if (!err) {
                 try {
@@ -218,7 +229,7 @@ app.on('ready', () => {
                         if (prevDataIndex !== -1) {
                             storageData[changingData.date][prevDataIndex].status = "paused";
                             fs.writeFile(storageTasksPath, JSON.stringify(storageData), (err) => {
-                                event.reply('TaskItem:completeChangePausedStatus', changingData.task);
+                                mainWindow.webContents.send('TaskItem:completeChangePausedStatus', changingData.task);
                             })
                         }
                     }
@@ -230,7 +241,7 @@ app.on('ready', () => {
         })
     })
     // process change task item status to continue
-    ipcMain.on('TaskItem:continue', (event, message) => {
+    ipcMain.handle('TaskItem:continue', (event, message) => {
         fs.readFile(storageTasksPath, (err, data) => {
             if (!err) {
                 try {
@@ -243,7 +254,7 @@ app.on('ready', () => {
                         if (prevDataIndex !== -1) {
                             storageData[changingData.date][prevDataIndex].status = "doing";
                             fs.writeFile(storageTasksPath, JSON.stringify(storageData), (err) => {
-                                event.reply('TaskItem:completeChangeContinuingStatus', changingData.task);
+                                mainWindow.webContents.send('TaskItem:completeChangeContinuingStatus', changingData.task);
                             })
                         }
                     }
@@ -255,7 +266,7 @@ app.on('ready', () => {
         })
     })
     // process delete task item
-    ipcMain.on('TaskItem:delete', (event, message) => {
+    ipcMain.handle('TaskItem:delete', (event, message) => {
         fs.readFile(storageTasksPath, (err, data) => {
             if (!err) {
                 try {
@@ -272,7 +283,7 @@ app.on('ready', () => {
                             })
                             storageData[changingData.date].splice(prevDataIndex, 1)
                             fs.writeFile(storageTasksPath, JSON.stringify(storageData), (err) => {
-                                event.reply('TaskItem:completDeleteTask', sendData);
+                                mainWindow.webContents.send('TaskItem:completDeleteTask', sendData);
                             })
                         }
                     }
@@ -284,7 +295,7 @@ app.on('ready', () => {
         })
     })
     // process reset progress of task items
-    ipcMain.on('TaskItem:reset', (event, date) => {
+    ipcMain.handle('TaskItem:reset', (event, date) => {
         fs.readFile(storageTasksPath, (err, data) => {
             if (!err) {
                 try {
@@ -295,7 +306,7 @@ app.on('ready', () => {
                         })
                         storageData[date] = newTaskItems;
                         fs.writeFile(storageTasksPath, JSON.stringify(storageData), (err) => {
-                            event.reply('TaskItems:reload', JSON.stringify(storageData[date]));
+                            mainWindow.webContents.send('TaskItems:reload', JSON.stringify(storageData[date]));
                         })
                     }
                 } catch (error) {
@@ -306,7 +317,7 @@ app.on('ready', () => {
         })
     })
     // handler reload issue
-    // ipcMain.on('Reload:Page', () => {
+    // ipcMain.handle('Reload:Page', () => {
     //     fs.readFile(storageTasksPath, (err, data) => {
     //         if(!err) {
     //             try {
@@ -325,7 +336,7 @@ app.on('ready', () => {
     // })
 
     // Handle request get data to mail content
-    ipcMain.on('TaskItems:getAll', () => {
+    ipcMain.handle('TaskItems:getAll', () => {
         fs.readFile(storageTasksPath, (err, data) => {
             if (!err) {
                 try {
@@ -344,8 +355,45 @@ app.on('ready', () => {
             }
         })
     })
+    // handle send mail
+    ipcMain.handle('Mail:send', (e, mailSettingData) => {
+        // console.log("received message", mailSettingData);
+        mailSetting = JSON.parse(mailSettingData);
+        let nodemailer = require('nodemailer');
+
+        let transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: 'lmtruong1512@gmail.com',
+                pass: 'Levuhao2x'
+            }
+        });
+
+        let mailOptions = {
+            from: 'truonglm@vietis.com.vn',
+            // to: 'truonglm@vietis.com.vn',
+            to: mailSetting.recipients,
+            subject: mailSetting.subject,
+            text: mailSetting.text,
+        };
+
+        transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+                console.log(error);
+                sendMailWindow.webContents.send('Mail:error-send');
+            } else {
+                sendMailWindow.webContents.send('Mail:complete-send', info);
+                
+                // sendMailWindow.webContents.on('did-finish-load', () => {
+                //     sendMailWindow.webContents.send('Mail:complete-send', info);
+                // })
+            }
+        });
+    })
+
 
 })
+
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {

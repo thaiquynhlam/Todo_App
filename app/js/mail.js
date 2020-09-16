@@ -1,5 +1,5 @@
-const path = require('path');
-const { ipcRenderer } = require('electron');
+// const path = require('path');
+// const { ipcRenderer } = require('electron');
 // Set current time to time bar
 let today = new Date();
 let year = today.getFullYear();
@@ -31,8 +31,8 @@ let taskListCompleted = "";
 let taskListPaused = "";
 let completedPercent = 0;
 
-ipcRenderer.send('TaskItems:getAll');
-ipcRenderer.on('TaskItems:completeGetAll', (event, data) => {
+window.api.send('TaskItems:getAll');
+window.api.receive('TaskItems:completeGetAll', data => {
   const tasksList = JSON.parse(data);
   let countCompletedTask = 0;
   let countPausedTask = 0;
@@ -72,35 +72,31 @@ Skype: live:lemanhtruong.ptit
 // send mail
 $('#btn-send').click(() => {
   $('#btn-send').text("Sending...")
-  let nodemailer = require('nodemailer');
-
-  let transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: 'truonglm@vietis.com.vn',
-      pass: 'Lmt0112358!@#'
-    }
-  });
-
-  let mailOptions = {
-    from: 'truonglm@vietis.com.vn',
-    // to: 'truonglm@vietis.com.vn',
-    to: $('#recipients').val(),
+  const mailSetting = {
+    recipients: $('#recipients').val(),
     subject: `[TRAINING_JS_NODEJS] Daily report ${dateFormateString}`,
-    text: $('#mail-content').val(),
-  };
-
-  transporter.sendMail(mailOptions, function (error, info) {
-    if (error) {
-      console.log(error);
-    } else {
-      console.log('Email sent: ' + info.response);
-      $('#btn-send').text("Send")
-      new Notification('Successfully', {
-        title: 'Successfully!',
-        body: 'The email sent successfully!',
-        icon: path.join(__dirname, 'images', 'gmail.png'),
-      })
-    }
-  });
+    text: $('#mail-content').val()
+  }
+  window.api.send('Mail:send', JSON.stringify(mailSetting));
+  //handle when receive success message
+  window.api.receive('Mail:complete-send', message => {
+    // console.log('Email sent: ' + message.response);
+    $('#btn-send').text("Sent")
+    new Notification('Successfully', {
+      title: 'Successfully!',
+      body: 'The email sent successfully!',
+      // icon: path.join(__dirname, 'images', 'gmail.png'),
+    })
+  })
+  //handle when receive error message
+  window.api.receive('Mail:error-send', () => {
+    // console.log("Received error")
+    $('#btn-send').text("Error")
+    new Notification('Error', {
+      title: 'Error!',
+      body: 'Some thing wrong, please check logs!',
+      // icon: path.join(__dirname, 'images', 'gmail.png'),
+    })
+  })
 })
+

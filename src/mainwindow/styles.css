@@ -1,0 +1,228 @@
+body
+{
+    background-color:#403f4d;
+    margin:0;
+    width:100%;
+    padding:0;
+    margin:0 auto;
+
+}
+.container{
+    width:80%;
+}
+.row .col.s6{
+    padding:0;
+}
+.icons{
+    color:white;
+    user-select: none;
+}
+.icons:hover{
+    cursor: pointer;
+    color:yellow;
+}
+.icons:active{
+    color:red;
+}
+/*------ header */
+.header{
+    margin-top:30px;
+    width: 80%;
+   color:white;
+   user-select: none;
+}
+/* leftsection */
+.dateleft{
+    float:left;
+    font-size:60px;
+    line-height:60px;
+    font-weight:700;
+}
+
+.dateright{
+  float: left;
+  display: block;
+  font-size:30px;
+  line-height:30px;
+  
+    
+ 
+}
+.dateright div:first-child {
+    font-weight:650;
+    margin-left:0;
+}
+.dateright div:last-child {
+    font-weight:400;
+}
+/* rightsection */
+.rightsection{
+    font-size:30px;
+    line-height:30px;
+    float:right;
+    width: 50%;
+    display:block;
+    margin-right:0 ;    
+   
+}
+/* progress */
+.progresscontainer{
+    width:80%;
+    margin:0 auto;
+    position: relative;
+
+}
+.unactivateprogress{
+   
+    background-color:#2e2e37;
+    max-width: 100%;
+    float: left;
+    width:0%;
+   
+}
+.doingprogress{
+   
+    background-color:#f6f682;
+    float: left;
+    max-width: 100%;
+    width:0%;
+    
+}
+.completeprogress{
+   
+    background-color:#68d2aa;
+    max-width: 100%;
+    float: left;
+    width:0%;
+}
+/*---- form */
+/* inputsection */
+form{
+    width: 80%;
+    margin:0 auto;
+    height:50px;
+    position: relative;
+    width:100
+}
+
+input[type="text"]{
+    position:absolute;
+  color:white;
+  border:none;
+}
+.addicon{
+    left:90%;
+    position:absolute;
+    top:-12px;
+    color:white;
+    background-color: #403f4d;
+    border:none;
+    line-height:50px;   
+    height:50px;    
+    font-size:50px;
+    outline: none !important;
+   
+}
+.addicon:focus{
+    background-color: #403f4d;
+}
+
+/*------ ulsection */ 
+ul{
+   
+    
+    display: block;
+    width:80%;
+    padding:0;
+    margin: 0 auto;
+   
+    font-size:35px;
+    color:#bbbbc3;
+   
+    
+}
+li{
+    box-shadow:
+  0 2.8px 2.2px rgba(0, 0, 0, 0.034),
+  0 6.7px 5.3px rgba(0, 0, 0, 0.048),
+  0 12.5px 10px rgba(0, 0, 0, 0.06),
+  0 22.3px 17.9px rgba(0, 0, 0, 0.072),
+  0 41.8px 33.4px rgba(0, 0, 0, 0.086),
+  0 100px 80px rgba(0, 0, 0, 0.12);
+  background-color:#4f4e5c;
+  border-radius: 5px;
+  padding-left:10px;
+  
+  
+
+}
+/* leftul */
+.leftul{
+    
+}
+/* rightulsection */
+.rightul i{
+    margin-top:10px;
+    font-size:40px;
+    float:right;
+    margin-right:10px;
+}
+.clearicon{
+    color:#d26755;
+}
+.checkicon{
+    color:#68d2aa;
+}
+.pauseicon{
+    color:#f6f682;
+}
+/* dolatersection */
+.dolatersection h4{
+  margin-left:50px;
+  color:white;
+}
+/* resetprogress */
+.reset a{
+  
+    margin-left:37%;
+    font-size: 20px;
+    color:#bbbbc3;
+}
+.reset a:hover{
+  
+    margin-left:37%;
+    font-size: 20px;
+    color:white;
+}
+/* collapsesection */
+.collapsible1{
+    transition:all ease 0.5s ;
+    display: block;
+}
+.collapsible1:hover{
+    cursor: pointer;
+    color:yellow;
+    user-select: none;
+    /* -o-transform:rotate(-90deg);
+    -ms-transform:rotate(-90deg);
+    -moz-transform:rotate(-90deg);
+    -webkit-transform:rotate(-90deg);
+    transform:rotate(-90deg); How many times it'll rotate = degrees÷360 */
+}
+.collapsible2{
+    transition:all ease 0.5s ;
+    display:block;
+}
+.collapsible2:hover{
+    cursor: pointer;
+    color:yellow;
+    user-select: none;
+    /* -o-transform:rotate(-90deg);
+    -ms-transform:rotate(-90deg);
+    -moz-transform:rotate(-90deg);
+    -webkit-transform:rotate(-90deg);
+    transform:rotate(-90deg); How many times it'll rotate = degrees÷360 */
+}
+.sentmail{
+    margin-left:65%;    
+}

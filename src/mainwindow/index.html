@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To Do List</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <div class="row header">
+      <div class="col s6">
+          <div class="dateleft" id="divdate"></div>
+          <div class="dateright">
+            <div id='divmonth'></div>
+            <div id='divyear'></div>
+          </div>
+      </div>
+      <div class="col s6 ">
+        <div class="rightsection " id="divday">
+        monday
+        </div>
+      </div>
+     
+    </div>
+
+    <!-- progresssection -->
+    <div class="progresscontainer">
+      <div class="progress black ">
+        <div class="doingprogress" id="doingprogress1">a</div>
+        <div class="completeprogress" id="completeprogress1">a</div>
+        <div class="unactivateprogress" id="unactivateprogress1">a</div>
+     </div>
+    </div>
+    <!-- form section -->
+   <form>
+      <!-- input text -->
+      
+     
+      <input type='text' id="searchinput" placeholder="Add new item"/>
+      <button type='submit' class="addicon icons" id="addbutton" class="addicon">+</button>
+     
+   </form>
+   <!-- ulsection -->
+    <ul class="ulsection " id="ulnewtask" >
+    
+   </ul>
+   <!-- doing section -->
+   <div class="dolatersection">
+     <h4>
+       <i class="material-icons collapsible1" id="expand1">expand_more</i>
+       Doing
+     </h4>
+   </div>
+   <ul class="ulsection" id="doingul" >
+    </ul>
+
+    <!-- completesection -->
+    
+   <div class="dolatersection">
+    <h4>
+      <i class="material-icons collapsible2" id="expand2">expand_more</i>
+      Completed
+    </h4>
+  </div>
+  <ul class="ulsection" id="completeul" >
+   </ul>
+   <!-- resetprogress -->
+   <div class="reset">
+     <a href="#" onclick="handlereset()">reset progress</a>
+  </div>
+  <br/>
+  <div class="sentmail">
+    <a class="waves-effect waves-light btn"onclick="sendmail()"><i class="material-icons left">email</i>Send mail</a>
+  </div>
+  <br/>
+  <br/>
+  <div class="sentmail">
+    <a class="waves-effect waves-light btn"onclick="excelexport()"><i class="material-icons left">import_export</i>export</a>
+  </div>
+ 
+  </div>
+    <script src="index.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.js" integrity="sha512-m2PhLxj2N91eYrIGU2cmIu2d0SkaE4A14bCjVb9zykvp6WtsdriFCiXQ/8Hdj0kssUB/Nz0dMBcoLsJkSCto0Q==" crossorigin="anonymous"></script>
+    
+</body>
+</html>

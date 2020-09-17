@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles1.css">
+    
+    <title>Daily report</title>
+</head>
+<body>
+   <div class="mailcontainer container"> 
+    <!-- header -->
+    <div class="mailheader">
+        <h3>New mail message</h3>
+    </div>
+    <div class="mailcontent  ">
+        <form>
+            <!-- value="lam.nguyenquynh@vietis.com.vn" -->
+           <div class="formcontent"> <input type='text' id='Tosender' placeholder='To'
+            value='kien.do@vietis.com.vn,lam.nguyenquynh@vietis.com.vn,bich.luongthi@vietis.com.vn'
+            /></div>
+           <hr/>
+           <div class="formcontent"> <input type='text' id='Subjectsender' placeholder='Subject'
+            
+            /></div>
+           <hr/>
+            <div class="formcontent">
+                
+            <textarea id="textarea"></textarea>
+            </div>
+            <button id="submitbutton"> send</button>
+            <br/>
+        </form>
+    </div>
+
+   </div>
+</body>
+<script src="mailjs.js"></script>
+</html>
